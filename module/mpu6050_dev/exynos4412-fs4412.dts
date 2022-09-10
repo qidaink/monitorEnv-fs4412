@@ -598,4 +598,23 @@
 		reset-gpios = <&gpm2 4 1>;
 		initial-mode = <1>;
 	};
+	fs4412-keys{
+		compatible = "fs4412,key2-3";
+		key2{
+			compatible = "fs4412,key2";
+			key_name = "key2";
+			gpio = <&gpx1 1 0>;
+			key_code = <0x2>;
+			interrupt-parent = <&gpx1>;
+			interrupts = <1 3>; /* 1表示组内中断号为25, 3表示上下沿都触发中断 */
+		};
+		key3{
+			compatible = "fs4412,key3";
+			key_name = "key3";
+			gpio = <&gpx1 2 0>;
+			key_code = <0x3>;
+			interrupt-parent = <&gpx1>;
+			interrupts = <2 3>; /* 2表示组内中断号为26, 3表示上下沿都触发中断 */
+		};
+	};
 };
