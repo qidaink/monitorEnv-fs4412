@@ -125,4 +125,12 @@ int send_msg_queue(long type, unsigned char text);                            /*
 int init_env_data(struct __allArea_env_data * allArea_env_data, int home_num);/* 安防监控项目所有的环境信息初始化（用于静态测试） */
 int show_env_data(struct __allArea_env_data * allArea_env_data, int home_num);/* 安防监控项目所有的环境信息打印 */
 
+extern void *pthread_client_request(void *arg); /* 接收CGI 等的请求 */
+extern void *pthread_refresh(void *arg);        /* 刷新共享内存数据线程 */
+extern void *pthread_sqlite(void *arg);         /* 数据库线程，保存数据库的数据 */
+extern void *pthread_transfer(void *arg);       /* 接收ZigBee的数据并解析 */
+extern void *pthread_gprs(void *arg);           /* 发送短信线程 */
+extern void *pthread_buzzer(void *arg);         /* 蜂鸣器控制线程 */
+extern void *pthread_led(void *arg);            /* led灯控制线程 */
+
 #endif
