@@ -32,6 +32,7 @@ do
 		echo "$file is directory"
         printf "\033[34m[INFO ]$file is directory!\033[0m\n"
 		cd $file
+		currentPath=$(pwd)
         printf "\033[34m[INFO ]当前文件[${FileName}]路径为:${currentPath}\033[0m\n"
         sleep 1
         printf "\033[34m[INFO ]清理之前的文件...\033[0m\n"
@@ -43,6 +44,7 @@ do
         printf "\033[34m[INFO ]清理中间文件...\033[0m\n"
 		make clean-all
 		cd -
+		currentPath=$(pwd)
         printf "\033[34m[INFO ]编译完成，回到顶层目录${currentPath}!!!\033[0m\n"
         sleep 3
 	elif [ -f "$file" ]
