@@ -118,6 +118,31 @@ struct __msg
     unsigned char text[QUEUE_MSG_LEN]; /* 消息正文， CMD 控制指定的设备 */
 };
 
+/* mpu6050数据联合体，读取的数据可能是三种 */
+union __mpu6050_data /* 从mpu6050读取的数据 */
+{
+    struct __accel_data /* 三轴加速度数据 */
+    {
+        unsigned short x;
+        unsigned short y;
+        unsigned short z;
+    } accel;
+    struct __gyro_data /* 三轴角速度数据 */
+    {
+        unsigned short x;
+        unsigned short y;
+        unsigned short z;
+    } gyro;
+    unsigned short temp;
+};
+
+/* MPU6050的ioctl操作宏定义 */
+#define MPU6050_MAGIC 'c'
+
+#define GET_ACCEL _IOR(MPU6050_MAGIC, 0, union __mpu6050_data)
+#define GET_GYRO  _IOR(MPU6050_MAGIC, 1, union __mpu6050_data)
+#define GET_TEMP  _IOR(MPU6050_MAGIC, 2, union __mpu6050_data)
+
 //===========================================================================
 /* 函数声明 */
 

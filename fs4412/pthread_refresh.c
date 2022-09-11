@@ -14,7 +14,7 @@
 #include "sem.h"
 
 #define  N 1024   /* for share memory, 共享内存大小 */
-
+extern pthread_cond_t cond_transfer;
 extern struct __allArea_env_data g_allArea_env_info; /* 安防监控项目所有的环境信息 */
 
 /* 共享内存区域数据结构体对象定义 */
@@ -108,11 +108,15 @@ void *pthread_refresh(void *arg)
         sem_p(semid, 0);
         shm_buf->shm_status = 1;/* 表示刷新数据 */
 #if 1
-        // 上传数据
+        /* 上传真实数据 */
+        shm_buf->shm_all_env_info.home[0] = g_allArea_env_info.home[0];  //真实数据上传
+#else
+        /* 上传模拟数据 */
         file_env_data_debug(&shm_buf->shm_all_env_info, 0);
 #endif
         sleep(1);
         sem_v(semid, 0);
+        pthread_cond_signal(&cond_transfer);/* 向数据采集条件变量发送信号，唤醒线程采集数据 */
     }
 
     printf("[INFO ]pthread_refresh will exit!\n");
