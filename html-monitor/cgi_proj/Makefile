@@ -56,12 +56,16 @@ $(FUNC_CGI) : %.cgi : %.c
 	$(CC) $(CFLAGS) $< cgic.c -o $@ $(LDFLAGS)
 
 install:
+	@for var in $(FUNC_CGI); do \
+		sudo cp -v  $(CGIDIRS)/$$var $(NFS_BOA_CGIDIR); \
+	done
 	@sudo cp -v $(CGIDIRS)/$(LOGIN_CGI) $(NFS_BOA_CGIDIR)
-	@sudo cp -v $(CGIDIRS)/$(FUNC_CGI) $(NFS_BOA_CGIDIR)
 
 uninstall:
-	@sudo rm -vf $(NFS_BOA_CGIDIR)/$(LOGIN_CGI).cgi
-	@sudo rm -vf $(NFS_BOA_CGIDIR)/$(FUNC_CGI).cgi
+	@for var in $(FUNC_CGI); do \
+		sudo rm -vf  $(NFS_BOA_CGIDIR)/$$var; \
+	done
+	@sudo rm -vf $(NFS_BOA_CGIDIR)/$(LOGIN_CGI)
 
 .PHONY:clean
 clean:
