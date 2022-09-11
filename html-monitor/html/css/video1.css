@@ -1,0 +1,20 @@
+/** =====================================================
+ * Copyright © hk. 2022-2025. All rights reserved.
+ * File name  : video.css
+ * Author     : qidaink
+ * Date       : 2022-09-11
+ * Version    : 
+ * Description: 摄像头视频采集页面css样式
+ * Others     : 
+ * Log        : 
+ * ======================================================
+ */
+
+ body {
+    background: url("../images/backgroud.png"); /*加载背景图*/
+    background-repeat: no-repeat; /* 设定背景图片非重复填充*/
+    background-attachment: fixed;  /* 设置背景图片不随页面滚动*/
+    background-position: 50% 50%; /* 设置背景图片位置*/
+    opacity: 0.97;  /* 设置透明度, 0-1 代表 透明-不透明 */
+    background-size: cover;  /* 设置保持图像的纵横比并将图像缩放成将完全覆盖背景定位区域的最小大小*/
+}

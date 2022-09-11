@@ -17,8 +17,7 @@ HTML_FILE             := $(notdir  $(HTML_FILE_PATH))
 NFS_BOA_WWWDIR        := ~/4nfs/rootfs/boa/www
 
 # images 图片文件
-IMAGES_DIRS           := images \
-						  pic   \
+IMAGES_DIRS           := images
 # css 样式文件
 CSS_DIRS              := css
 # 拷贝相关文件到NFS中的根文件系统中
