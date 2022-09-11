@@ -57,7 +57,7 @@ void *pthread_client_request(void *arg)
         bzero(&msgbuf, sizeof(msgbuf));
         printf("[INFO ]wait form client request...\n");
         /* 2.2接收消息 */
-        msgrcv(msgid, &msgbuf, sizeof(msgbuf) - sizeof(long), 1L, 0); /* 接收的消息类型为0L的消息 */
+        msgrcv(msgid, &msgbuf, sizeof(msgbuf) - sizeof(long), 1L, 0); /* 阻塞式接收消息类型为1L的消息，没有该类型的消息msgrcv函数一直阻塞等待 */
         printf("Get %ldL msg\n", msgbuf.devtype);
         printf("text[0] = %#x\n", msgbuf.text[0]);
         /* 2.3处理消息 */

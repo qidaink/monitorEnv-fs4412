@@ -65,7 +65,7 @@ int send_msg_queue(long type, unsigned char text)
     /* 0.相关变量定义 */
     struct __msg msgbuf;
     /* 1.消息成员赋值 */
-    msgbuf.type = 0L;       /* 我们现在统一监控home0,将所有的消息类型都赋值为0L */
+    msgbuf.type = 1L;       /* 我们现在统一监控home0,将所有的消息类型都赋值为1L,若为0的话，接收的时候无法区分了，所以最好设置为大于0的数 */
     msgbuf.devtype = type;  /* 控制的设备类型，1L==LED控制，2L==buzzer控制，...  */
     msgbuf.text[0] = text;  /* 消息正文，一般是一个1字节的命令 */
     /* 2.发送消息到消息队列 */
