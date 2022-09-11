@@ -63,37 +63,37 @@ void *pthread_client_request(void *arg)
         /* 2.3处理消息 */
         switch (msgbuf.devtype) /* 具体消息处理 */
         {
-        case 1L: /* LED 设备消息处理，进行LED控制 */
-            printf("[INFO ]hello led!\n");
-            break;
-        case 2L: /* 蜂鸣器消息处理，进行蜂鸣器控制 */
-            printf("[INFO ]hello beep!\n");
-            break;
-        case 3L: /* 模拟数码管消息处理，进行四路LED灯模拟的数码管控制 */
-            printf("[INFO ]hello seg!\n");
-            break;
-        case 4L: /* 风扇消息处理，进行风扇控制 */
-            printf("[INFO ]hello fan!\n");
-            break;
-        case 5L: /* 温湿度最值消息处理，进行温湿度最值设置 */
-            printf("[INFO ]set env data\n");
-            printf("temMAX: %d\n", *((int *)&msgbuf.text[1]));
-            printf("temMIN: %d\n", *((int *)&msgbuf.text[5]));
-            printf("humMAX: %d\n", *((int *)&msgbuf.text[9]));
-            printf("humMAX: %d\n", *((int *)&msgbuf.text[13]));
-            printf("illMAX: %d\n", *((int *)&msgbuf.text[17]));
-            printf("illMAX: %d\n", *((int *)&msgbuf.text[21]));
-            break;
-        case 6L: /* 用于个人的扩展 */
-        case 7L: /* 用于个人的扩展 */
-        case 8L: /* 用于个人的扩展 */
-        case 9L: /* 用于个人的扩展 */
-            printf("extention!\n");
-            break;
-        case 10L: /* GPRS处理，3G通信模块-GPRS */
-            break;
-        default:
-            break;
+            case 1L: /* LED 设备消息处理，进行LED控制 */
+                printf("[INFO ]hello led!\n");
+                break;
+            case 2L: /* 蜂鸣器消息处理，进行蜂鸣器控制 */
+                printf("[INFO ]hello beep!\n");
+                break;
+            case 3L: /* 模拟数码管消息处理，进行四路LED灯模拟的数码管控制 */
+                printf("[INFO ]hello seg!\n");
+                break;
+            case 4L: /* 风扇消息处理，进行风扇控制 */
+                printf("[INFO ]hello fan!\n");
+                break;
+            case 5L: /* 温湿度最值消息处理，进行温湿度最值设置 */
+                printf("[INFO ]set env data\n");
+                printf("temMAX: %d\n", *((int *)&msgbuf.text[1]));
+                printf("temMIN: %d\n", *((int *)&msgbuf.text[5]));
+                printf("humMAX: %d\n", *((int *)&msgbuf.text[9]));
+                printf("humMAX: %d\n", *((int *)&msgbuf.text[13]));
+                printf("illMAX: %d\n", *((int *)&msgbuf.text[17]));
+                printf("illMAX: %d\n", *((int *)&msgbuf.text[21]));
+                break;
+            case 6L: /* 用于个人的扩展 */
+            case 7L: /* 用于个人的扩展 */
+            case 8L: /* 用于个人的扩展 */
+            case 9L: /* 用于个人的扩展 */
+                printf("extention!\n");
+                break;
+            case 10L: /* GPRS处理，3G通信模块-GPRS */
+                break;
+            default:
+                break;
         }
     }
     printf("[INFO ]pthread_client_request will exit!\n");
