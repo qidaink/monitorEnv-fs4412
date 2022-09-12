@@ -43,6 +43,25 @@ unsigned char led_cmd;
 | led_cmd[0]  |LED状态，1打开，0关闭|
 
 
+#### BUZZER控制命令
+
+用一个 unsigned char 类型的数据表示（8位）
+
+```c
+unsigned char buzzer_cmd;
+/** 命令说明：
+ * 0x50 -- BUZZER关闭, 0x51 -- BUZZER打开
+ */
+```
+
+|位|说明|
+|--|--|
+| buzzer_cmd[7:6]|平台编号，00表示Zigbee，01表示Cotex-A9|
+| buzzer_cmd[5:4]|设备编号，00--LED设备，01--BUZZER设备，10--四路模拟数码管设备，11--Zigbee风扇|
+| buzzer_cmd[3:1]|保留，默认为000|
+| buzzer_cmd[0]  |BUZZER状态，1打开，0关闭|
+
+
 
 ```
 8位

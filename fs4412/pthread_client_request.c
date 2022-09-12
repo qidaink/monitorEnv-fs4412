@@ -22,6 +22,11 @@ struct __msg msgbuf;/* 定义一个消息结构体变量 */
 extern pthread_mutex_t mutex_led; /* LED互斥锁 */
 extern pthread_cond_t cond_led;   /* LED条件变量 */
 extern unsigned char led_cmd;     /* LED命令 */
+/* BUZZER控制相关变量声明 */
+extern pthread_mutex_t mutex_buzzer;
+extern pthread_cond_t cond_buzzer;
+extern unsigned char buzzer_cmd; /* BUZZER命令 */
+
 /**
  * @Function   : pthread_client_request
  * @brief      : 消息队列消息处理线程
@@ -74,9 +79,12 @@ void *pthread_client_request(void *arg)
 				pthread_mutex_unlock(&mutex_led);
 				pthread_cond_signal(&cond_led);
 				break;
-                break;
             case 2L: /* 蜂鸣器消息处理，进行蜂鸣器控制 */
-                printf("[INFO ]hello beep!\n");
+                printf("[INFO ]hello buzzer!\n");
+                pthread_mutex_lock(&mutex_buzzer);
+				buzzer_cmd = msgbuf.text[0];  /* 获取BUZZER控制命令 */
+				pthread_mutex_unlock(&mutex_buzzer);
+				pthread_cond_signal(&cond_buzzer);
                 break;
             case 3L: /* 模拟数码管消息处理，进行四路LED灯模拟的数码管控制 */
                 printf("[INFO ]hello seg!\n");
