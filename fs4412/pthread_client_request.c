@@ -18,6 +18,10 @@ extern key_t msg_key;
 
 struct __msg msgbuf;/* 定义一个消息结构体变量 */
 
+/* LED控制相关变量声明 */
+extern pthread_mutex_t mutex_led; /* LED互斥锁 */
+extern pthread_cond_t cond_led;   /* LED条件变量 */
+extern unsigned char led_cmd;     /* LED命令 */
 /**
  * @Function   : pthread_client_request
  * @brief      : 消息队列消息处理线程
@@ -65,6 +69,11 @@ void *pthread_client_request(void *arg)
         {
             case 1L: /* LED 设备消息处理，进行LED控制 */
                 printf("[INFO ]hello led!\n");
+                pthread_mutex_lock(&mutex_led);
+				led_cmd = msgbuf.text[0];  /* 获取LED控制命令 */
+				pthread_mutex_unlock(&mutex_led);
+				pthread_cond_signal(&cond_led);
+				break;
                 break;
             case 2L: /* 蜂鸣器消息处理，进行蜂鸣器控制 */
                 printf("[INFO ]hello beep!\n");

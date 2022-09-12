@@ -35,13 +35,19 @@
 				<div align="center">
 					<form id="form1" name="form1" method="post" action="cgi-bin/a9_led.cgi">
 						<div class="strip1">
-							<input type="hidden" name="store" id="hiddenField" value="1" /> Led:
-							<label>
-								<input type="radio" name="led" value="1" id="led_0" />on
-							</label>
-							<label>
-								<input type="radio" name="led" value="0" id="led_1" />off
-							</label>
+							<input type="hidden" name="store" id="hiddenField" value="1" /> LED设备:
+								<select name="led_name">
+									<option value="2">LED2</option>
+									<option value="3">LED3</option>
+									<option value="4">LED4</option>
+									<option value="5">LED5</option>
+									<option value="6">LED2-5</option>
+									<option value="7">流水灯</option>
+								</select>
+								<select name="led_status">
+									<option value="0">关闭</option>
+									<option value="1">打开</option>
+								</select>
 							<input type="submit" name="button" id="button" value="确定" />
 						</div>
 					</form>
