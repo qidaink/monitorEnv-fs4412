@@ -31,6 +31,10 @@ typedef struct led_desc /* LED属性结构体定义 */
 } led_desc_t;
 
 unsigned char led_cmd;           /* LED命令 */
+unsigned char seg_cmd;           /* seg命令 */
+char function_flag;              /* 区分LED命令和seg命令 */
+
+int close_all_led(int led_fd);   /* 关闭所有LED灯 */
 
 /**
  * @Function   : pthread_led
@@ -60,41 +64,86 @@ void *pthread_led(void *arg)
 		pthread_mutex_lock(&mutex_led);
 		pthread_cond_wait(&cond_led, &mutex_led);
 		printf("============led ioctl=============\n");
-        /* 2.1获取LED控制状态 */
-        led.status = !((led_cmd >> 0) & 0x01);/* xxxx xxx0 | 0000 0001 = 0000 0000; xxxx xxx1 | 0000 0001 = 0000 0001 */
-        /* 2.2获取LED编号 */
-        led.num = (led_cmd >> 1) & 0x7;       
-        printf("\nled_status=%d, led_num=%d\n", led.status, led.num);
-        switch(led.num )
+        if(function_flag == 1)
         {
-            case 2: /* LED2 */
-            case 3: /* LED3 */
-            case 4: /* LED4 */
-            case 5: /* LED5 */
-                ioctl(led_fd, LED_STATUS(led.status), led.num);
-                break;
-            case 6: /* 全部LED */
+            /* 2.1获取LED控制状态 */
+            led.status = !((led_cmd >> 0) & 0x01);/* xxxx xxx0 | 0000 0001 = 0000 0000; xxxx xxx1 | 0000 0001 = 0000 0001 */
+            /* 2.2获取LED编号 */
+            led.num = (led_cmd >> 1) & 0x7;       
+            printf("\nled_status=%d, led_num=%d\n", led.status, led.num);
+            switch(led.num )
+            {
+                case 2: /* LED2 */
+                case 3: /* LED3 */
+                case 4: /* LED4 */
+                case 5: /* LED5 */
+                    ioctl(led_fd, LED_STATUS(led.status), led.num);
+                    break;
+                case 6: /* 全部LED */
+                    for(i = 2; i < 6; i++)
+                    {
+                        ioctl(led_fd, LED_STATUS(led.status), i);
+                    }
+                    break;
+                case 7: /* 流水灯 */
+                    close_all_led(led_fd);
+                    for (j = 0; j < 3; j++)
+                    {
+                        for (i = 2; i < 6; i++)
+                        {
+                            ioctl(led_fd, LED_DEV_ON, i);
+                            usleep(500000);
+                            ioctl(led_fd, LED_DEV_OFF, i);
+                            usleep(500000);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            /* 2.3seg对LED的控制部分 */
+            unsigned char temp = (seg_cmd >> 4) & 0x2;/* 0x2 = 0000 0010 */
+            led_desc_t seg;
+            unsigned char seg_cmd_num;
+            if(temp == 0x2)/* s说明是seg模拟数码管命令 */
+            {
+                close_all_led(led_fd);
+                seg_cmd_num = seg_cmd & 0x0f;/* 获取seg命令的低4位 */
                 for(i = 2; i < 6; i++)
                 {
-                    ioctl(led_fd, LED_STATUS(led.status), i);
+                    seg.status = !((seg_cmd_num >> (i - 2)) & 0x1);/* 1111 */
+                    ioctl(led_fd, LED_STATUS(seg.status), i);
+                    usleep(50000);
                 }
-                break;
-            case 7: /* 流水灯 */
-                for (j = 0; j < 3; j++)
-                {
-                    for (i = 2; i < 6; i++)
-                    {
-                        ioctl(led_fd, LED_DEV_ON, i);
-                        usleep(500000);
-                        ioctl(led_fd, LED_DEV_OFF, i);
-                        usleep(500000);
-                    }
-                }
-                break;
+            }
         }
 		pthread_mutex_unlock(&mutex_led);
 	}
     close(led_fd);
     printf("[INFO ]pthread_led will exit!\n");
     exit(0);
+}
+
+/**
+ * @Function     : close_all_led
+ * @brief        : 关闭所有LED灯
+ * @param led_fd : int类型，led设备的文件描述符
+ * @return       : int类型，操作结束返回0
+ * @Description  : 
+ */
+int close_all_led(int led_fd)
+{
+    /* 0.定义相关变量 */
+    int i = 0;
+    /* 1.关闭所有LED */
+    for (i = 2; i < 6; i++)
+    {
+        ioctl(led_fd, LED_DEV_OFF, i);
+        usleep(50000);
+    }
+
+    return 0;
 }
