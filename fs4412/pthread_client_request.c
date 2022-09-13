@@ -34,6 +34,7 @@ extern pthread_mutex_t mutex_zigbee;
 extern pthread_cond_t cond_zigbee;
 extern unsigned char fan_cmd; /* FAN命令 */
 
+struct __set_env html_set_env;
 
 /**
  * @Function   : pthread_client_request
@@ -111,12 +112,16 @@ void *pthread_client_request(void *arg)
                 break;
             case 5L: /* 温湿度最值消息处理，进行温湿度最值设置 */
                 printf("[INFO ]set env data\n");
-                printf("temMAX: %d\n", *((int *)&msgbuf.text[1]));
-                printf("temMIN: %d\n", *((int *)&msgbuf.text[5]));
-                printf("humMAX: %d\n", *((int *)&msgbuf.text[9]));
-                printf("humMAX: %d\n", *((int *)&msgbuf.text[13]));
-                printf("illMAX: %d\n", *((int *)&msgbuf.text[17]));
-                printf("illMAX: %d\n", *((int *)&msgbuf.text[21]));
+                if(sscanf((char *)&msgbuf.text[1], "&%d&%d&%d&%d", &html_set_env.tempMAX, &html_set_env.tempMIN, 
+                                                           &html_set_env.humidityMAX, &html_set_env.humidityMIN) != 4)
+                {
+                    perror("[ERROR]sscanf");
+                    exit(-1);
+                }
+                printf("temMAX: %d\n", html_set_env.tempMAX);
+                printf("temMIN: %d\n", html_set_env.tempMIN);
+                printf("humMAX: %d\n", html_set_env.humidityMAX);
+                printf("humMAX: %d\n", html_set_env.humidityMIN);
                 break;
             case 6L: /* 用于个人的扩展 */
             case 7L: /* 用于个人的扩展 */

@@ -1,55 +1,33 @@
 /** =====================================================
  * Copyright © hk. 2022-2025. All rights reserved.
- * File name  : common.h
+ * File name  : env_data.h
  * Author     : qidaink
- * Date       : 2022-09-10
+ * Date       : 2022-09-11
  * Version    : 
- * Description: 全局共用头文件
- * Others     : 主要是一些共用变量的定义和声明
+ * Description: 
+ * Others     : 
  * Log        : 
  * ======================================================
  */
 
-/** 主要内容：
- * 全局的宏定义#define
- * 全局的线程函数声明
- * 全局的设备节点声明
- * 全局的消息队列发送函数外部extern声明
- * 全局的消息队列传递的结构体信息声明
- */
-
-#ifndef __COMMON_H__
-#define __COMMON_H__
+#ifndef __ENV_DATA_H__
+#define __ENV_DATA_H__
 
 /* 头文件 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <signal.h>
-#include <pthread.h>
-#include <termios.h>
-#include <syscall.h>
-
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/msg.h>
-#include <sys/sem.h>
-#include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/ioctl.h>
-#include <linux/fs.h>
-#include <linux/ioctl.h>
-#include <stdint.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include <unistd.h>
 #include <errno.h>
-#include <linux/input.h>
+#include "cgic.h"
 
 //===========================================================================
 /* 宏定义 */
 #define MONITOR_NUM   1            /* 监控的房间数量 */
-#define QUEUE_MSG_LEN 32           /* 消息队列中消息正文的最大长度 */
+#define SHM_SIZE      64           /* 共享内存大小 */
 
 /* 前景色(字体颜色)，printk和printf 打印输出的颜色定义，主要是用于实现带颜色的输出 */
 #define CLS           "\033[0m"    /* 清除所有颜色 */
@@ -110,59 +88,12 @@ struct __allArea_env_data   /* 多个监控区域的属性结构体 */
 	struct __env_data  home[MONITOR_NUM];	/* 这是一个结构体数组，每一个成员都表示一个房间环境数据 */
 }__attribute__((aligned (1))); 
 
-/* 消息队列消息传递结构体 */
-struct __msg
+/* 共享内存区域数据类型结构体 */
+struct __shm_addr
 {
-    long type;                         /* 从消息队列接收消息时用于判断的消息类型，0L===home0  1L===home1 ...  */
-    long devtype;                      /* 具体的消息控制设备类型，指代控制的设备，是什么类型的设备，1L表示LED，2L表示蜂鸣器 ... */
-    unsigned char text[QUEUE_MSG_LEN]; /* 消息正文， CMD 控制指定的设备 */
+    char shm_status;
+    struct __allArea_env_data  shm_all_env_info;
 };
 
-/* mpu6050数据联合体，读取的数据可能是三种 */
-union __mpu6050_data /* 从mpu6050读取的数据 */
-{
-    struct __accel_data /* 三轴加速度数据 */
-    {
-        unsigned short x;
-        unsigned short y;
-        unsigned short z;
-    } accel;
-    struct __gyro_data /* 三轴角速度数据 */
-    {
-        unsigned short x;
-        unsigned short y;
-        unsigned short z;
-    } gyro;
-    unsigned short temp;
-};
 
-struct __set_env
-{
-    int tempMIN;        /* 温度下限 */
-    int tempMAX;        /* 温度上限 */
-    int humidityMIN;    /* 湿度下限 */
-    int humidityMAX;    /* 湿度上限 */
-};
-/* MPU6050的ioctl操作宏定义 */
-#define MPU6050_MAGIC 'c'
-
-#define GET_ACCEL _IOR(MPU6050_MAGIC, 0, union __mpu6050_data)
-#define GET_GYRO  _IOR(MPU6050_MAGIC, 1, union __mpu6050_data)
-#define GET_TEMP  _IOR(MPU6050_MAGIC, 2, union __mpu6050_data)
-
-//===========================================================================
-/* 函数声明 */
-
-int send_msg_queue(long type, unsigned char text);                            /* 向消息队列发送消息 */
-int init_env_data(struct __allArea_env_data * allArea_env_data, int home_num);/* 安防监控项目所有的环境信息初始化（用于静态测试） */
-int show_env_data(struct __allArea_env_data * allArea_env_data, int home_num);/* 安防监控项目所有的环境信息打印 */
-
-extern void *pthread_client_request(void *arg); /* 接收CGI 等的请求 */
-extern void *pthread_refresh(void *arg);        /* 刷新共享内存数据线程 */
-extern void *pthread_sqlite(void *arg);         /* 数据库线程，保存数据库的数据 */
-extern void *pthread_transfer(void *arg);       /* 接收ZigBee的数据并解析 */
-extern void *pthread_gprs(void *arg);           /* 发送短信线程 */
-extern void *pthread_buzzer(void *arg);         /* 蜂鸣器控制线程 */
-extern void *pthread_led(void *arg);            /* led灯控制线程 */
-extern void *pthread_fan(void *arg);            /*fan设备控制线程 */         
 #endif

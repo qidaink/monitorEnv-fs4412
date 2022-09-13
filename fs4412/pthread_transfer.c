@@ -22,6 +22,7 @@ int mpu_fd;
 extern pthread_cond_t cond_transfer;
 extern pthread_mutex_t mutex_transfer;
 extern struct __allArea_env_data g_allArea_env_info; /* 安防监控项目所有的环境信息 */
+extern struct __set_env html_set_env;
 
 int file_env_info_a9_zigbee(struct __allArea_env_data *rt_status, int home_num);
 int printf_sensor_info_debug(struct __allArea_env_data * allArea_env_data, int home_num);
@@ -82,11 +83,11 @@ int file_env_info_a9_zigbee(struct __allArea_env_data *rt_status, int home_num)
     rt_status->home[home_num].zigbee_info.head[2] = 'm';
     rt_status->home[home_num].zigbee_info.head[3] = '\0';
     rt_status->home[home_num].zigbee_info.temperature = 10.0;
-    rt_status->home[home_num].zigbee_info.tempMIN = 2.0;
-    rt_status->home[home_num].zigbee_info.tempMAX = 20.0;
+    rt_status->home[home_num].zigbee_info.tempMIN = (float)html_set_env.tempMIN;
+    rt_status->home[home_num].zigbee_info.tempMAX = (float)html_set_env.tempMAX;
     rt_status->home[home_num].zigbee_info.humidity = 20.0;
-    rt_status->home[home_num].zigbee_info.humidityMIN = 10.0;
-    rt_status->home[home_num].zigbee_info.humidityMAX = 30.0;
+    rt_status->home[home_num].zigbee_info.humidityMIN = (float)html_set_env.humidityMIN;
+    rt_status->home[home_num].zigbee_info.humidityMAX = (float)html_set_env.humidityMAX;
     rt_status->home[home_num].zigbee_info.reserved[0] = 0.01;
     rt_status->home[home_num].zigbee_info.reserved[1] = -0.01;
 
