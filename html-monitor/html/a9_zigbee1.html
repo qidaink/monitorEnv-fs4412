@@ -96,21 +96,16 @@
 			<td height="60">
 				<div align="center">
 					<form id="form2" name="form2" method="post" action="cgi-bin/zigbee_fan.cgi">
-						<div class="strip1"> <input type="hidden" name="store" id="hiddenField" value="1" /> Fan:
+						<div class="strip1"> 
+							<input type="hidden" name="store" id="hiddenField" value="0" />Zigbee风扇设备
 							<label>
-								<input type="radio" name="fan" value="0" id="fan_0" />off
+								<input type="radio" name="fan" value="1" id="fan_0" />on
 							</label>
 
 							<label>
-								<input type="radio" name="fan" value="1" id="fan_1" />1
+								<input type="radio" name="fan" value="0" id="fan_1" />off
 							</label>
-							<label>
-								<input type="radio" name="fan" value="2" id="fan_2" />2
-							</label>
-							<label>
-								<input type="radio" name="fan" value="3" id="fan_3" />3
-							</label>
-							<input type="submit" name="button2" id="button2" value="确定" />
+							<input type="submit" name="button2" id="button2" value="确定"/>
 						</div>
 					</form>
 				</div>

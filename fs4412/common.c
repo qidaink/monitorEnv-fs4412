@@ -26,6 +26,7 @@ pthread_mutex_t mutex_transfer;
 pthread_mutex_t mutex_gprs;
 pthread_mutex_t mutex_buzzer;
 pthread_mutex_t mutex_led;
+pthread_mutex_t mutex_zigbee;
 /* 条件变量定义 */
 pthread_cond_t cond_client_request;
 pthread_cond_t cond_refresh;
@@ -34,6 +35,7 @@ pthread_cond_t cond_transfer;
 pthread_cond_t cond_gprs;
 pthread_cond_t cond_buzzer;
 pthread_cond_t cond_led;
+pthread_cond_t cond_zigbee;
 
 /* IPC对象标识符定义 */
 int msgid; /* 消息队列id */

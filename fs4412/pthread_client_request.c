@@ -29,6 +29,12 @@ extern pthread_mutex_t mutex_buzzer;
 extern pthread_cond_t cond_buzzer;
 extern unsigned char buzzer_cmd; /* BUZZER命令 */
 
+/* FAN控制相关变量声明 */
+extern pthread_mutex_t mutex_zigbee;
+extern pthread_cond_t cond_zigbee;
+extern unsigned char fan_cmd; /* FAN命令 */
+
+
 /**
  * @Function   : pthread_client_request
  * @brief      : 消息队列消息处理线程
@@ -98,6 +104,10 @@ void *pthread_client_request(void *arg)
                 break;
             case 4L: /* 风扇消息处理，进行风扇控制 */
                 printf("[INFO ]hello fan!\n");
+                pthread_mutex_lock(&mutex_zigbee);
+				fan_cmd = msgbuf.text[0];  /* 获取fan控制命令 */
+				pthread_mutex_unlock(&mutex_zigbee);
+				pthread_cond_signal(&cond_zigbee);
                 break;
             case 5L: /* 温湿度最值消息处理，进行温湿度最值设置 */
                 printf("[INFO ]set env data\n");

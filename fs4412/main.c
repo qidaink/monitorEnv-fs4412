@@ -21,6 +21,7 @@ extern pthread_mutex_t mutex_transfer;
 extern pthread_mutex_t mutex_gprs;
 extern pthread_mutex_t mutex_buzzer;
 extern pthread_mutex_t mutex_led;
+extern pthread_mutex_t mutex_zigbee;
 /* 条件变量 */
 extern pthread_cond_t cond_client_request;
 extern pthread_cond_t cond_refresh;
@@ -29,6 +30,7 @@ extern pthread_cond_t cond_transfer;
 extern pthread_cond_t cond_gprs;
 extern pthread_cond_t cond_buzzer;
 extern pthread_cond_t cond_led;
+extern pthread_cond_t cond_zigbee;
 /* IPC对象ID */
 extern int msgid;
 extern int shmid;
@@ -42,6 +44,7 @@ pthread_t tid_transfer;
 pthread_t tid_gprs;
 pthread_t tid_buzzer;
 pthread_t tid_led;
+pthread_t tid_fan;
 
 void release_pthread_resource(int signo);/* 信号处理函数，用于释放资源 */
 
@@ -55,6 +58,7 @@ int main(int argc, const char *argv[])
     pthread_mutex_init(&mutex_gprs, NULL);
     pthread_mutex_init(&mutex_buzzer, NULL);
     pthread_mutex_init(&mutex_led, NULL);
+    pthread_mutex_init(&mutex_zigbee, NULL);
     /* 2.等待接受信号（Ctrl+C触发），信号处理函数 */
     signal(SIGINT, release_pthread_resource);
 
@@ -66,6 +70,7 @@ int main(int argc, const char *argv[])
     pthread_cond_init(&cond_gprs, NULL);
     pthread_cond_init(&cond_buzzer, NULL);
     pthread_cond_init(&cond_led, NULL);
+    pthread_cond_init(&cond_zigbee, NULL);
 
     /* 4.创建所需线程 */
     pthread_create(&tid_client_request, NULL, pthread_client_request, NULL);
@@ -75,6 +80,7 @@ int main(int argc, const char *argv[])
     pthread_create(&tid_gprs, NULL, pthread_gprs, NULL);
     pthread_create(&tid_buzzer, NULL, pthread_buzzer, NULL);
     pthread_create(&tid_led, NULL, pthread_led, NULL);
+    pthread_create(&tid_fan, NULL, pthread_fan, NULL);
 #if 0
     /* 用于测试全局环境参数结构体变量赋值与显示 */
     init_env_data(&sm_allArea_env_info, 0);
@@ -95,6 +101,8 @@ int main(int argc, const char *argv[])
     printf("[INFO ]pthread6!\n");
     pthread_join(tid_led, NULL);
     printf("[INFO ]pthread7!\n");
+    pthread_join(tid_fan, NULL);
+    printf("[INFO ]pthread8!\n");
     return 0;
 }
 
@@ -115,6 +123,7 @@ void release_pthread_resource(int signo)
     pthread_mutex_destroy(&mutex_gprs);
     pthread_mutex_destroy(&mutex_buzzer);
     pthread_mutex_destroy(&mutex_led);
+    pthread_mutex_destroy(&mutex_zigbee);
     /* 2.销毁条件变量 */
     pthread_cond_destroy(&cond_client_request);
     pthread_cond_destroy(&cond_refresh);
@@ -123,6 +132,7 @@ void release_pthread_resource(int signo)
     pthread_cond_destroy(&cond_gprs);
     pthread_cond_destroy(&cond_buzzer);
     pthread_cond_destroy(&cond_led);
+    pthread_cond_destroy(&cond_zigbee);
     /* 3.分离线程，线程结束后不会产生僵尸线程 */
     pthread_detach(tid_client_request);
     pthread_detach(tid_refresh);
@@ -131,6 +141,7 @@ void release_pthread_resource(int signo)
     pthread_detach(tid_gprs);
     pthread_detach(tid_buzzer);
     pthread_detach(tid_led);
+    pthread_detach(tid_fan);
 
     printf("\n[INFO ]all pthread is detached!\n");
     /* 4.销毁IPC对象 */
