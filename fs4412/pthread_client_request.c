@@ -34,6 +34,12 @@ extern pthread_mutex_t mutex_zigbee;
 extern pthread_cond_t cond_zigbee;
 extern unsigned char fan_cmd; /* FAN命令 */
 
+/* GPRS */
+extern pthread_mutex_t mutex_gprs;
+extern pthread_cond_t cond_gprs;
+extern char recive_phone[12];
+extern char center_phone[12];
+
 struct __set_env html_set_env;
 
 /**
@@ -130,6 +136,27 @@ void *pthread_client_request(void *arg)
                 printf("extention!\n");
                 break;
             case 10L: /* GPRS处理，3G通信模块-GPRS */
+                printf("[INFO ]set phone data!\n");
+                {
+                    pthread_mutex_lock(&mutex_gprs);
+                    int i = 0, j = 0;
+                    /* 13800100500&15137735092& */
+                    while(msgbuf.text[i] != '&')
+                    {
+                        recive_phone[i] = msgbuf.text[i];
+                        i++;
+                    }
+                    recive_phone[i++] = '\0'; /* i = 11, msgbuf.text[11] = &, 执行完毕后，i=12  */
+                    printf("recive:%s\n", recive_phone);
+                    for (j = 0; msgbuf.text[i] != '\0' && msgbuf.text[i] != '&'; i++, j++)
+                    {
+                        center_phone[j] = msgbuf.text[i];
+                    }
+                    center_phone[j] = '\0';
+                    printf("center:%s\n", center_phone);
+                    pthread_cond_signal(&cond_gprs);
+                    pthread_mutex_unlock(&mutex_gprs);
+                }
                 break;
             default:
                 break;

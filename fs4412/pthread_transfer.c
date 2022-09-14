@@ -76,7 +76,6 @@ void *pthread_transfer(void *arg)
  */
 int file_env_info_a9_zigbee(struct __allArea_env_data *rt_status, int home_num)
 {
-    int env_info_size = sizeof(struct __allArea_env_data);
     /* 1.获取Zigbee数据 */
     rt_status->home[home_num].zigbee_info.head[0] = 'q';
     rt_status->home[home_num].zigbee_info.head[1] = 's';
