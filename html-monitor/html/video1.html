@@ -36,7 +36,7 @@
 				</tr>
 				<tr>
 					<td height="34">
-						<form id="form3" name="form3" method="post" action="cgi-bin/capture1.cgi"><input name="store" type="hidden" value="1" />
+						<form id="form3" name="form3" method="post" action="cgi-bin/camera_capture.cgi"><input name="store" type="hidden" value="1" />
 							<table width="500" border="1" bgcolor="#CCFFFF" bordercolor="#5500FF">
 								<tr>
 									<td width="57">张数:</td>
@@ -66,8 +66,9 @@
 									</td>
 									<td width="226">
 										<div align="center">
-											<input type="submit" name="button3" id="button3"
-												value="抓拍" />&nbsp;&nbsp;&nbsp;
+											<!-- <input type="submit" name="button3" id="button3"
+												value="抓拍" /> -->
+											<a target="_blank" href="http://192.168.10.102:8080/?action=snapshot">拍照</a>	&nbsp;&nbsp;&nbsp;
 											<a href="cgi-bin/picture1.cgi">历史照片</a>
 										</div>
 									</td>
