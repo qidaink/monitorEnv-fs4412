@@ -164,5 +164,6 @@ extern void *pthread_transfer(void *arg);       /* 接收ZigBee的数据并解�
 extern void *pthread_gprs(void *arg);           /* 发送短信线程 */
 extern void *pthread_buzzer(void *arg);         /* 蜂鸣器控制线程 */
 extern void *pthread_led(void *arg);            /* led灯控制线程 */
-extern void *pthread_fan(void *arg);            /*fan设备控制线程 */         
+extern void *pthread_fan(void *arg);            /* fan设备控制线程 */        
+extern void *pthread_dht11(void *arg);          /* dht11设备控制线程 */      
 #endif

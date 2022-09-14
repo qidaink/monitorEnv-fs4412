@@ -45,6 +45,7 @@ pthread_t tid_gprs;
 pthread_t tid_buzzer;
 pthread_t tid_led;
 pthread_t tid_fan;
+pthread_t tid_dht11;
 
 void release_pthread_resource(int signo);/* 信号处理函数，用于释放资源 */
 
@@ -81,6 +82,7 @@ int main(int argc, const char *argv[])
     pthread_create(&tid_buzzer, NULL, pthread_buzzer, NULL);
     pthread_create(&tid_led, NULL, pthread_led, NULL);
     pthread_create(&tid_fan, NULL, pthread_fan, NULL);
+    pthread_create(&tid_dht11, NULL, pthread_dht11, NULL);
 #if 0
     /* 用于测试全局环境参数结构体变量赋值与显示 */
     init_env_data(&sm_allArea_env_info, 0);
@@ -103,6 +105,8 @@ int main(int argc, const char *argv[])
     printf("[INFO ]pthread7!\n");
     pthread_join(tid_fan, NULL);
     printf("[INFO ]pthread8!\n");
+    pthread_join(tid_dht11, NULL);
+    printf("[INFO ]pthread9!\n");
     return 0;
 }
 
